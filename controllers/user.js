@@ -19,6 +19,7 @@ module.exports.getUser = (req, res, next) => {
 };
 
 module.exports.updateUser = (req, res, next) => {
+  console.log(' update ');
   const { name, email } = req.body;
   if ((name === undefined) && (email === undefined)) {
     throw new WrongKeys();
@@ -37,12 +38,19 @@ module.exports.updateUser = (req, res, next) => {
     },
   )
     .then((user) => {
+      console.log(' -> -> ');
+      console.log(user)
+      return user
+    })
+    .then((user) => {
+      console.log(' -> ');
       if (!user) {
         throw new NotFoundError();
       }
       return res.status(200).send(user);
     })
     .catch((err) => {
+      console.log(err.name);
       if (err.name === 'ValidationError') next(new ValidationError());
       if (err.name === 'NotFoundError') next(new NotFoundError());
       next(err);
