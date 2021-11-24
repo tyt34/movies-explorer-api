@@ -46,37 +46,24 @@ module.exports.getUser = (req, res, next) => {
 };
 
 module.exports.updateUser = (req, res, next) => {
-  const { name, email } = req.body;
-  if ((name === undefined) && (email === undefined)) {
+  const { name } = req.body;
+  const mail = req.body.email;
+  console.log(' update ', mail);
+  if ((name === undefined) && (mail === undefined)) {
     throw new WrongKeys();
   }
-  User.findOne({ email })
+  User.findOne({ email: mail })
     .then((info) => {
       if (info === null) {
-        updateNewInfo(name, email, req.user._id, res, next);
+        updateNewInfo(name, mail, req.user._id, res, next);
+      } else if ((req.user._id !== info._id.toString())) {
+        next(new RepeatEmail());
+      } else if ((info.name === name) && (info.email === mail)) {
+        throw new NotNewInfo();
+      } else if (info.email === mail) {
+        updateNewInfo(name, mail, req.user._id, res, next);
       } else {
-        /*
-        if ((req.user._id !== info._id.toString())) {
-          next(new RepeatEmail());
-        } else {
-          if ((info.name === name) && (info.email === email)) {
-            throw new NotNewInfo();
-          } else if (info.email === email) {
-            updateNewInfo(name, email, req.user._id, res, next);
-          } else {
-            next(new RepeatEmail());
-          }
-        }
-        */
-        if (req.user._id !== info._id.toString()) {
-          next(new RepeatEmail());
-        } else if ((info.name === name) && (info.email === email)) {
-          throw new NotNewInfo();
-        } else if (info.email === email) {
-          updateNewInfo(name, email, req.user._id, res, next);
-        } else {
-          next(new RepeatEmail());
-        }
+        next(new RepeatEmail());
       }
     })
     .catch((err) => {
