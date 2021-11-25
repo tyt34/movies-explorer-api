@@ -50,4 +50,4 @@ module.exports.updatUserValidator = celebrate({
     email: Joi.string().required().email(),
     name: Joi.string().min(2).max(30),
   }),
-})
+});

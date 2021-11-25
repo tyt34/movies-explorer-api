@@ -26,21 +26,6 @@ module.exports.delMovie = (req, res, next) => {
 };
 
 module.exports.createMovie = (req, res, next) => {
-  const {
-    country,
-    director,
-    duration,
-    year,
-    description,
-    image,
-    trailer,
-    thumbnail,
-    movieId,
-    nameRU,
-    nameEN,
-  } = req.body;
-  console.log(country);
-  console.log(nameEN);
   Movie.create({
     ...req.body,
     owner: req.user._id,

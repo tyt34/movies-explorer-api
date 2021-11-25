@@ -3,11 +3,11 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const { errors } = require('celebrate');
 const cors = require('cors');
-const rateLimit = require("express-rate-limit");
 const routes = require('./routes/index');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const NotFoundAddress = require('./errors/not-found-address');
 require('dotenv').config();
+
 let nameDb;
 const { limiter } = require('./configRateLimiter');
 
@@ -39,7 +39,7 @@ app.use(limiter);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-mongoose.connect('mongodb://localhost:27017/'+nameDb, {
+mongoose.connect(`mongodb://localhost:27017/${nameDb}`, {
   useNewUrlParser: true,
 });
 
@@ -51,7 +51,7 @@ app.get('/crash-test', () => {
   }, 0);
 });
 
-app.use(routes)
+app.use(routes);
 
 app.use(() => {
   throw new NotFoundAddress();
@@ -60,10 +60,7 @@ app.use(() => {
 app.use(errorLogger);
 app.use(errors());
 
-
-
 app.use((err, req, res, next) => {
-  console.log(' => ', err.name);
   const { statusCode = 500, message } = err;
 
   res

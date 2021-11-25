@@ -51,7 +51,6 @@ module.exports.getUser = (req, res, next) => {
 module.exports.updateUser = (req, res, next) => {
   const { name } = req.body;
   const mail = req.body.email;
-  console.log(' update ', mail);
   if ((name === undefined) && (mail === undefined)) {
     throw new WrongKeys();
   }

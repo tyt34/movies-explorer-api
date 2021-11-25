@@ -1,8 +1,10 @@
 const express = require('express');
-const router = express.Router();
 const auth = require('../middlewares/auth');
 
+const router = express.Router();
+
 router.use('/', require('./app'));
+
 router.use(auth);
 router.use('/', require('./user'));
 router.use('/', require('./movie'));
