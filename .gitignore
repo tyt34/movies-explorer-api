@@ -1,0 +1,7 @@
+/installAllLib.sh
+node_modules/
+dist/
+testComand
+error.log
+request.log
+.env
