@@ -39,18 +39,10 @@ module.exports.createMovie = (req, res, next) => {
     nameRU,
     nameEN,
   } = req.body;
+  console.log(country);
+  console.log(nameEN);
   Movie.create({
-    country,
-    director,
-    duration,
-    year,
-    description,
-    image,
-    trailer,
-    thumbnail,
-    movieId,
-    nameRU,
-    nameEN,
+    ...req.body,
     owner: req.user._id,
   })
     .then((data) => {
@@ -62,7 +54,10 @@ module.exports.createMovie = (req, res, next) => {
       );
     })
     .catch((err) => {
-      if (err.name === 'ValidationError') next(new ValidationError(err.message));
-      next(err);
+      if (err.name === 'ValidationError') {
+        next(new ValidationError(err.message));
+      } else {
+        next(err);
+      }
     });
 };

@@ -40,8 +40,11 @@ module.exports.getUser = (req, res, next) => {
       return res.status(200).send({ data: user });
     })
     .catch((err) => {
-      if (err.name === 'CastError') next(new CastError());
-      next(err);
+      if (err.name === 'CastError') {
+        next(new CastError());
+      } else {
+        next(err);
+      }
     });
 };
 
@@ -67,8 +70,12 @@ module.exports.updateUser = (req, res, next) => {
       }
     })
     .catch((err) => {
-      if (err.name === 'ValidationError') next(new ValidationError());
-      if (err.name === 'NotFoundError') next(new NotFoundError());
-      next(err);
+      if (err.name === 'ValidationError') {
+        next(new ValidationError());
+      } else if (err.name === 'NotFoundError') {
+        next(new NotFoundError());
+      } else {
+        next(err);
+      }
     });
 };

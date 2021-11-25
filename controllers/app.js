@@ -38,11 +38,13 @@ module.exports.register = (req, res, next) => {
       });
     })
     .catch((err) => {
-      if (err.name === 'ValidationError') next(new ValidationError(err.message));
-      if (err.name === 'MongoServerError' && err.code === 11000) {
+      if (err.name === 'ValidationError') {
+        next(new ValidationError(err.message));
+      } else if (err.code === 11000) {
         next(new RepeatEmail());
+      } else {
+        next(err);
       }
-      next(err);
     });
 };
 
