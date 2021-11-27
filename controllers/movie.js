@@ -16,11 +16,10 @@ module.exports.delMovie = (req, res, next) => {
     .orFail(() => new NotFoundError())
     .then((movie) => {
       if (!movie.owner.equals(req.user._id)) {
-        next(new ForbiddenError());
-      } else {
-        Movie.deleteOne(movie)
-          .then(() => res.status(200).send({ message: 'Фильм удален' }));
+        return next(new ForbiddenError());
       }
+      return Movie.deleteOne(movie)
+        .then(() => res.status(200).send({ message: 'Фильм удален' }));
     })
     .catch(next);
 };
