@@ -36,6 +36,7 @@ module.exports.register = (req, res, next) => {
         data: {
           name, email,
         },
+        status: 'ok'
       });
     })
     .catch((err) => {
@@ -72,7 +73,16 @@ module.exports.login = (req, res, next) => {
         Promise.reject(new WrongPass());
       }
       const token = jwt.sign({ _id: user._id }, soup, { expiresIn: '7d' });
-      res.send({ token });
+      res.send(
+        {
+          token: token,
+          status: 'ok',
+          user: {
+            name: user.name,
+            email: user.email
+          }
+        }
+      );
     })
     .catch(() => {
       next(new WrongPass());

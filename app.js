@@ -36,7 +36,7 @@ app.use('*', cors(options.origin));
 
 app.use(requestLogger);
 
-app.use(limiter);
+//app.use(limiter);
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -65,6 +65,9 @@ app.use((err, req, res, next) => {
       message: statusCode === 500
         ? 'На сервере произошла ошибка'
         : message,
+      statusCode: statusCode,
+      error: err.error,
+      status: 'bad',
     });
   next();
 });

@@ -4,6 +4,7 @@ class NotNewInfo extends Error {
     this.statusCode = 400;
     this.message = 'Вы не внесли никакой новой информации!';
     this.name = 'NotNewInfo';
+    this.ok = 'bad'
   }
 }
 
