@@ -1,13 +1,14 @@
 const jwt = require('jsonwebtoken');
 const NeedAuth = require('../errors/need-auth');
+const { jwtNotSecret } = require('../configBackend');
 require('dotenv').config();
 
-let soup = 'dev-secret';
+let soup;
 
 if (process.env.NODE_ENV === 'production') {
   soup = process.env.JWT_SECRET;
 } else {
-  soup = 'dev-secret';
+  soup = jwtNotSecret;
 }
 
 module.exports = (req, res, next) => {

@@ -1,3 +1,4 @@
+const ValidationError = require('../errors/validation-error');
 const mongoose = require('mongoose');
 const validator = require('validator');
 
@@ -7,7 +8,9 @@ const userSchema = new mongoose.Schema({
     required: true,
     unique: true,
     validate: {
-      validator: (validationEmail) => validator.isEmail(validationEmail),
+      validator: (validationEmail) => {
+        validator.isEmail(validationEmail)
+      },
       message: (props) => `${props.value} это не соответствует адресу почты пользователя!`,
     },
   },

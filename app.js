@@ -3,18 +3,18 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const { errors } = require('celebrate');
 const cors = require('cors');
-const rateLimit = require("express-rate-limit");
 const routes = require('./routes/index');
-const { requestLogger, errorLogger } = require('./middlewares/logger');
-const NotFoundAddress = require('./errors/not-found-address');
-require('dotenv').config();
-let nameDb;
+const { databaseURL } = require('./configBackend');
 const { limiter } = require('./configRateLimiter');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
+require('dotenv').config();
 
-if ((process.env.NODE_ENV === 'production') && (process.env.nameDb !== undefined)) {
+let nameDb;
+
+if (process.env.NODE_ENV === 'production') {
   nameDb = process.env.nameDb;
 } else {
-  nameDb = 'moviesdb';
+  nameDb = databaseURL;
 }
 
 const { PORT = 3000 } = process.env;
@@ -34,16 +34,16 @@ const options = {
 
 app.use('*', cors(options.origin));
 
-app.use(limiter);
+app.use(requestLogger);
+
+//app.use(limiter);
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-mongoose.connect('mongodb://localhost:27017/'+nameDb, {
+mongoose.connect(nameDb, {
   useNewUrlParser: true,
 });
-
-app.use(requestLogger);
 
 app.get('/crash-test', () => {
   setTimeout(() => {
@@ -51,19 +51,12 @@ app.get('/crash-test', () => {
   }, 0);
 });
 
-app.use(routes)
-
-app.use(() => {
-  throw new NotFoundAddress();
-});
+app.use(routes);
 
 app.use(errorLogger);
 app.use(errors());
 
-
-
 app.use((err, req, res, next) => {
-  console.log(' => ', err.name);
   const { statusCode = 500, message } = err;
 
   res
@@ -72,6 +65,9 @@ app.use((err, req, res, next) => {
       message: statusCode === 500
         ? 'На сервере произошла ошибка'
         : message,
+      statusCode: statusCode,
+      error: err.error,
+      status: 'bad',
     });
   next();
 });

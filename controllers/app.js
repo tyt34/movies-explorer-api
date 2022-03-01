@@ -5,13 +5,14 @@ const ValidationError = require('../errors/validation-error');
 const WrongPass = require('../errors/wrong-pass');
 const RepeatEmail = require('../errors/repeat-email');
 const WrongKeys = require('../errors/wrong-keys');
+const { jwtNotSecret } = require('../configBackend');
 
-let soup = 'dev-secret';
+let soup;
 
 if (process.env.NODE_ENV === 'production') {
   soup = process.env.JWT_SECRET;
 } else {
-  soup = 'dev-secret';
+  soup = jwtNotSecret;
 }
 
 module.exports.register = (req, res, next) => {
@@ -35,6 +36,7 @@ module.exports.register = (req, res, next) => {
         data: {
           name, email,
         },
+        status: 'ok'
       });
     })
     .catch((err) => {
@@ -71,7 +73,16 @@ module.exports.login = (req, res, next) => {
         Promise.reject(new WrongPass());
       }
       const token = jwt.sign({ _id: user._id }, soup, { expiresIn: '7d' });
-      res.send({ token });
+      res.send(
+        {
+          token: token,
+          status: 'ok',
+          user: {
+            name: user.name,
+            email: user.email
+          }
+        }
+      );
     })
     .catch(() => {
       next(new WrongPass());
