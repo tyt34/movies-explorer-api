@@ -50,7 +50,7 @@
 }
 ```
 
-* `PATCH /users/me` — изменить поля *name* и *about* пользователя. Необходим заголовок `authorization: Bearer jwt_tokken`. В теле запроса должен быть `name` и `about`. Формат ответа: 
+* `PATCH /users/me` — изменить поля *name* и *email* пользователя. Необходим заголовок `authorization: Bearer jwt_tokken`. В теле запроса должен быть `name` и `email`. Формат ответа: 
 ```ts
 {
     "data": {
