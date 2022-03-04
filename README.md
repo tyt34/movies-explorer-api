@@ -122,3 +122,5 @@
 ## Запуск приложения
 1. npm i
 2. npm start
+
+- Не забудьте запустить frontend часть, которая находится [по этой ссылке](https://github.com/tyt34/movies-explorer-frontend). 
