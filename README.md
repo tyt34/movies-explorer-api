@@ -65,7 +65,6 @@
 ### Взаимодействие с фильмами
 
 * `POST /movies` — создать фильм, который будет в категории избранные зарегистрированного пользователя. Необходим заголовок `authorization: Bearer jwt_tokken`. В теле запроса должен быть `country`, `director`, `duration`, `year`, `description`, `image`, `trailer`, `thumbnail`, `movieId`, `nameRU` и `nameEN`.
-* 
 * Формат ответа: 
 ```ts
 {
